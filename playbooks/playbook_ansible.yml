@@ -1,0 +1,112 @@
+---
+- name: Provisionamento Debian com Docker e Docker Compose
+  hosts: all
+  become: true
+  tasks:
+    - name: Atualizar o cache do apt e fazer upgrade do sistema
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Instalar pacotes dependentes para o Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Adicionar chave GPG oficial do Docker
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+
+    - name: Adicionar repositório oficial do Docker
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Instalar Docker e Docker Compose Plugin (v2)
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        update_cache: yes
+        state: present
+
+    - name: Garantir que o serviço do Docker está rodando
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Criar diretório da aplicação
+      file:
+        path: /opt/minha_aplicacao
+        state: directory
+        mode: '0755'
+
+    - name: Inserir conteúdo no arquivo docker-compose.yml
+      copy:
+        dest: /opt/minha_aplicacao/docker-compose.yml
+        content: |
+          version: '3.8'
+
+          services:
+            database:
+              image: mysql:5.7
+              container_name: database
+              restart: always
+              environment:
+                MYSQL_DATABASE: wordpress
+                MYSQL_USER: user_wp
+                MYSQL_PASSWORD: senha_segura_123
+                MYSQL_ROOT_PASSWORD: senha_root_segura
+              volumes:
+                - my:/var/lib/mysql
+              networks:
+                - wordpress
+
+            webserver:
+              image: wordpress:latest
+              container_name: webserver
+              restart: always
+              depends_on:
+                - database
+              environment:
+                WORDPRESS_DB_HOST: database:3306
+                WORDPRESS_DB_USER: user_wp
+                WORDPRESS_DB_PASSWORD: senha_segura_123
+                WORDPRESS_DB_NAME: wordpress
+              volumes:
+                - app:/var/www/html
+              networks:
+                - wordpress
+
+            webproxy:
+              image: luish083/nginx-personalizado:latest
+              container_name: webproxy
+              restart: always
+              depends_on:
+                - webserver
+              ports:
+                - "8080:8080"
+              networks:
+                - wordpress
+
+          volumes:
+            app:
+            my:
+
+          networks:
+            wordpress:
+              driver: bridge
+
+    - name: Executar o Docker Compose (Inicializar aplicação)
+      command: docker compose up -d
+      args:
+        chdir: /opt/minha_aplicacao

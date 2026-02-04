@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Serviço de Banco de Dados 
+  database:
+    image: mysql:5.7 # Imagem oficial do MySQL 
+    container_name: database
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: user_wp
+      MYSQL_PASSWORD: senha_segura_123 # Defina uma senha segura
+      MYSQL_ROOT_PASSWORD: senha_root_segura
+    volumes:
+      - [cite_start]my:/var/lib/mysql # Volume persistente chamado 'my' 
+    networks:
+      - [cite_start]wordpress # Rede 'wordpress' 
+
+  # Serviço da Aplicação Wordpress 
+  webserver:
+    image: wordpress:latest # Imagem oficial do Wordpress
+    container_name: webserver
+    restart: always
+    depends_on:
+      - database
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_USER: user_wp
+      WORDPRESS_DB_PASSWORD: senha_segura_123
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - [cite_start]app:/var/www/html # Volume persistente chamado 'app' 
+    networks:
+      - [cite_start]wordpress # Rede 'wordpress' 
+    # Nota: Este container NÃO expõe portas externamente, conforme requisito 
+
+  # Serviço de Proxy Nginx [cite: 45]
+  webproxy:
+    # Requisito: Imagem baseada no Nginx oficial, configurada para LoadBalance L4
+    [cite_start]image: luish083/nginx-personalizado:latest
+    container_name: webproxy
+    restart: always
+    depends_on:
+      - webserver
+    ports:
+      - [cite_start]"8080:8080" # Expõe a porta 8080 externa mapeada para a interna 
+    networks:
+      - [cite_start]wordpress # Rede 'wordpress' 
+
+# Definição dos Volumes [cite: 48, 49]
+volumes:
+  app:
+  my:
+
+# Definição das Redes 
+networks:
+  wordpress:
+    driver: bridge
+
