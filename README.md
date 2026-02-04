@@ -36,9 +36,8 @@ A aplicação é composta por 3 contêineres em uma rede chamada `wordpress`:
 
 ```text
 .
-├── nginx-personalizado/        # Arquivos para build da imagem Docker
-│   ├── Dockerfile
-│   └── nginx.conf              # Configuração de Proxy Reverso L4
+├── playbooks          
+    └── playbook_ansible.yml
 ├── docker-compose.yml          # Definição dos containers, redes e volumes
 ├── playbook_ansible.yml        # Automação do provisionamento e Docker
 ├── Vagrantfile                 # Configuração da VM e chamada do Ansible
