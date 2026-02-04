@@ -49,35 +49,20 @@ A aplicação é composta por 3 contêineres em uma rede chamada `wordpress`:
 
 ## 🚀 Como Executar
 
-### Passo 1: Configuração da Imagem Docker (Opcional)
-*Nota: A imagem deve ser pública no DockerHub.*
-
-1. Entre na pasta da imagem:
-   ```bash
-   cd nginx-personalizado
-   ```
-
-2. Faça o build e envie para o Docker Hub:
-   ```bash
-   docker build -t luish083/nginx-personalizado:latest .
-   docker push luish083/nginx-personalizado:latest
-   ```
-
-### Passo 2: Provisionamento da Infraestrutura
+### Passo 1: Provisionamento da Infraestrutura
 Na raiz do projeto, execute o comando para iniciar a máquina virtual e o provisionamento:
 
 ```bash
 vagrant up
 ```
 
-O Vagrant irá configurar a rede privada e o IP `192.168.56.1XY`. O Ansible instalará o Docker e subirá os serviços automaticamente.
+O Vagrant irá configurar a rede privada e o IP `192.168.56.148`. O Ansible instalará o Docker e subirá os serviços automaticamente.
 
 ### Passo 3: Acessando a Aplicação
 Após o término, acesse no navegador:
 
-**[http://192.168.56.1](http://192.168.56.1)XY:8080**
+**[http://192.168.56.148](http://192.168.56.148:8080**
 
-*(Substitua `XY` pelos últimos dígitos das matrículas da equipe).*
 
 ---
 
