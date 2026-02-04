@@ -61,7 +61,7 @@ O Vagrant irá configurar a rede privada e o IP `192.168.56.148`. O Ansible inst
 ### Passo 3: Acessando a Aplicação
 Após o término, acesse no navegador:
 
-**[http://192.168.56.148](http://192.168.56.148:8080**
+**[http://192.168.56.148:8080]**
 
 
 ---
