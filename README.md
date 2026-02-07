@@ -48,7 +48,14 @@ A aplicação é composta por 3 contêineres em uma rede chamada `wordpress`:
 
 ## 🚀 Como Executar
 
-### Passo 1: Provisionamento da Infraestrutura
+### Passo 1: Clone do Repositório
+Cole esse comando no seu terminal para fazer o clone do repositório
+
+```bash
+git clone https://github.com/luishenrike083/Projeto-ASA-02.git
+```
+
+### Passo 2: Provisionamento da Infraestrutura
 Na raiz do projeto, execute o comando para iniciar a máquina virtual e o provisionamento:
 
 ```bash
