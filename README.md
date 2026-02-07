@@ -37,9 +37,8 @@ A aplicação é composta por 3 contêineres em uma rede chamada `wordpress`:
 ```text
 .
 ├── playbooks          
-    └── playbook_ansible.yml
+    └── playbook_ansible.yml    # Automação do provisionamento e Docker
 ├── docker-compose.yml          # Definição dos containers, redes e volumes
-├── playbook_ansible.yml        # Automação do provisionamento e Docker
 ├── Vagrantfile                 # Configuração da VM e chamada do Ansible
 └── README.md                   # Documentação do projeto
 ```
