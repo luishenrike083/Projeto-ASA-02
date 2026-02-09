@@ -50,61 +50,14 @@
         state: directory
         mode: '0755'
 
-    - name: Inserir conteúdo no arquivo docker-compose.yml
+    - name: Copiar o arquivo docker-compose.yml para a VM
       copy:
+        src: docker-compose.yml
         dest: /opt/minha_aplicacao/docker-compose.yml
-        content: |
-          version: '3.8'
+        mode: '0644'
+          
 
-          services:
-            database:
-              image: mysql:5.7
-              container_name: database
-              restart: always
-              environment:
-                MYSQL_DATABASE: wordpress
-                MYSQL_USER: user_wp
-                MYSQL_PASSWORD: senha_segura_123
-                MYSQL_ROOT_PASSWORD: senha_root_segura
-              volumes:
-                - my:/var/lib/mysql
-              networks:
-                - wordpress
 
-            webserver:
-              image: wordpress:latest
-              container_name: webserver
-              restart: always
-              depends_on:
-                - database
-              environment:
-                WORDPRESS_DB_HOST: database:3306
-                WORDPRESS_DB_USER: user_wp
-                WORDPRESS_DB_PASSWORD: senha_segura_123
-                WORDPRESS_DB_NAME: wordpress
-              volumes:
-                - app:/var/www/html
-              networks:
-                - wordpress
-
-            webproxy:
-              image: luish083/nginx-personalizado:latest
-              container_name: webproxy
-              restart: always
-              depends_on:
-                - webserver
-              ports:
-                - "8080:8080"
-              networks:
-                - wordpress
-
-          volumes:
-            app:
-            my:
-
-          networks:
-            wordpress:
-              driver: bridge
 
     - name: Executar o Docker Compose (Inicializar aplicação)
       command: docker compose up -d
