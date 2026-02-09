@@ -52,7 +52,7 @@
 
     - name: Copiar o arquivo docker-compose.yml para a VM
       copy:
-        src: docker-compose.yml
+        src: ../docker-compose.yml
         dest: /opt/minha_aplicacao/docker-compose.yml
         mode: '0644'
           
